@@ -1,0 +1,67 @@
+Nr dogs: 248
+Nr cats: 252
+Nearest Neighbors
+Score: 0.58
+Confusion matrix:
+[[20 56]
+ [ 7 67]]
+Classification report:
+             precision    recall  f1-score   support
+
+        cat       0.74      0.26      0.39        76
+        dog       0.54      0.91      0.68        74
+
+avg / total       0.64      0.58      0.53       150
+
+Gaussian Naive Bayes
+Score: 0.64
+Confusion matrix:
+[[45 31]
+ [23 51]]
+Classification report:
+             precision    recall  f1-score   support
+
+        cat       0.66      0.59      0.62        76
+        dog       0.62      0.69      0.65        74
+
+avg / total       0.64      0.64      0.64       150
+
+SVM
+Score: 0.493333333333
+Confusion matrix:
+[[ 0 76]
+ [ 0 74]]
+Classification report:
+             precision    recall  f1-score   support
+
+        cat       0.00      0.00      0.00        76
+        dog       0.49      1.00      0.66        74
+
+avg / total       0.24      0.49      0.33       150
+
+AdaBoos
+Score: 0.62
+Confusion matrix:
+[[49 27]
+ [30 44]]
+Classification report:
+             precision    recall  f1-score   support
+
+        cat       0.62      0.64      0.63        76
+        dog       0.62      0.59      0.61        74
+
+avg / total       0.62      0.62      0.62       150
+
+Random Forest
+Score: 0.666666666667
+Confusion matrix:
+[[55 21]
+ [29 45]]
+Classification report:
+             precision    recall  f1-score   support
+
+        cat       0.65      0.72      0.69        76
+        dog       0.68      0.61      0.64        74
+
+avg / total       0.67      0.67      0.67       150
+
