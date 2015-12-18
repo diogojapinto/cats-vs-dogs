@@ -1,0 +1,97 @@
+λ python .\dogs_vs_cats.py
+Nr dogs: 12500
+Nr cats: 12500
+Nearest Neighbors
+Score: 0.6524
+Confusion matrix:
+[[1808 1942]
+ [ 665 3085]]
+Classification report:
+             precision    recall  f1-score   support
+
+        cat       0.73      0.48      0.58      3750
+        dog       0.61      0.82      0.70      3750
+
+avg / total       0.67      0.65      0.64      7500
+
+Gaussian Naive Bayes
+Score: 0.624133333333
+Confusion matrix:
+[[2151 1599]
+ [1220 2530]]
+Classification report:
+             precision    recall  f1-score   support
+
+        cat       0.64      0.57      0.60      3750
+        dog       0.61      0.67      0.64      3750
+
+avg / total       0.63      0.62      0.62      7500
+
+SVM
+Score: 0.689866666667
+Confusion matrix:
+[[2745 1005]
+ [1321 2429]]
+Classification report:
+             precision    recall  f1-score   support
+
+        cat       0.68      0.73      0.70      3750
+        dog       0.71      0.65      0.68      3750
+
+avg / total       0.69      0.69      0.69      7500
+
+AdaBoos
+Score: 0.697066666667
+Confusion matrix:
+[[2688 1062]
+ [1210 2540]]
+Classification report:
+             precision    recall  f1-score   support
+
+        cat       0.69      0.72      0.70      3750
+        dog       0.71      0.68      0.69      3750
+
+avg / total       0.70      0.70      0.70      7500
+
+Random Forest
+Score: 0.724
+Confusion matrix:
+[[2963  787]
+ [1283 2467]]
+Classification report:
+             precision    recall  f1-score   support
+
+        cat       0.70      0.79      0.74      3750
+        dog       0.76      0.66      0.70      3750
+
+avg / total       0.73      0.72      0.72      7500
+
+Classifier: RandomForestClassifier
+Score: 0.724
+Confusion matrix:
+[[2963  787]
+ [1283 2467]]
+Classification report:
+             precision    recall  f1-score   support
+
+        cat       0.70      0.79      0.74      3750
+        dog       0.76      0.66      0.70      3750
+
+avg / total       0.73      0.72      0.72      7500
+
+Traceback (most recent call last):
+  File ".\dogs_vs_cats.py", line 436, in <module>
+    p = best_clf.predict(img_features)
+  File "C:\Anaconda3\envs\VCOM\lib\site-packages\sklearn\ensemble\forest.py", line 498, in predict
+    proba = self.predict_proba(X)
+  File "C:\Anaconda3\envs\VCOM\lib\site-packages\sklearn\ensemble\forest.py", line 537, in predict_proba
+    X = self._validate_X_predict(X)
+  File "C:\Anaconda3\envs\VCOM\lib\site-packages\sklearn\ensemble\forest.py", line 319, in _validate_X_predict
+    return self.estimators_[0]._validate_X_predict(X, check_input=True)
+  File "C:\Anaconda3\envs\VCOM\lib\site-packages\sklearn\tree\tree.py", line 365, in _validate_X_predict
+    X = check_array(X, dtype=DTYPE, accept_sparse="csr")
+  File "C:\Anaconda3\envs\VCOM\lib\site-packages\sklearn\utils\validation.py", line 398, in check_array
+    _assert_all_finite(array)
+  File "C:\Anaconda3\envs\VCOM\lib\site-packages\sklearn\utils\validation.py", line 54, in _assert_all_finite
+    " or a value too large for %r." % X.dtype)
+ValueError: Input contains NaN, infinity or a value too large for dtype('float32').
