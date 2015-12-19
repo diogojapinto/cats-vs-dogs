@@ -2,13 +2,13 @@
 # coding: utf-8
 
 # # Dogs vs Cats - features
-# 
+#
 # [Kaggle](https://www.kaggle.com/c/dogs-vs-cats)
-# 
+#
 # 1 = dog
-# 
+#
 # 0 = cat
-# 
+#
 # Notes for report:
 #     analyse how the variability of nr_features affects
 #     try different detectors
@@ -28,8 +28,8 @@ plt.style.use('ggplot')
 
 # In[85]:
 
-NR_SAMPLES = 100
-NR_WORDS = 1000
+NR_SAMPLES = 500
+NR_WORDS = 500
 
 
 # ### Load training dataset
@@ -47,7 +47,7 @@ imgs_paths = [train_folder + filepath for filepath in listdir(train_folder)]
 # In[52]:
 
 # select a subset
-#imgs_paths = imgs_paths[:NR_SAMPLES]
+imgs_paths = imgs_paths[:NR_SAMPLES]
 
 
 # In[11]:
@@ -57,7 +57,7 @@ from os import listdir
 def load_images(imgs_paths, gray=False):
     for path in imgs_paths:
         img = cv2.imread(path)
-        
+
         if gray:
             yield cv2.imread(path, cv2.IMREAD_GRAYSCALE)
         else:
@@ -124,28 +124,28 @@ flann = cv2.FlannBasedMatcher(index_params,search_params)
 def train_bow(imgs, detector, matcher, extractor=None):
     if extractor == None:
         extractor = detector
-    
-    bow_trainer = cv2.BOWKMeansTrainer(NR_WORDS, 
-                                       attempts=1, 
+
+    bow_trainer = cv2.BOWKMeansTrainer(NR_WORDS,
+                                       attempts=1,
                                        flags=cv2.KMEANS_PP_CENTERS)
-    
+
     bow_extractor = cv2.BOWImgDescriptorExtractor(extractor, matcher)
-    
+
     for img in load_images(imgs, gray=True):
-        
+
         kp = detector.detect(img)
         kp, des = extractor.compute(img, kp)
-        
+
         bow_trainer.add(des)
-        
+
     vocabulary = bow_trainer.cluster()
-    
+
     pk.dump(vocabulary, open('vocabulary.p', 'wb'))
-    
-    vocabulary = pk.load(open('vocabulary', 'rb'))
-    
+
+    vocabulary = pk.load(open('vocabulary.p', 'rb'))
+
     bow_extractor.setVocabulary(vocabulary)
-    
+
     return bow_extractor
 
 
@@ -167,9 +167,9 @@ imgs = load_images(imgs_paths, gray=True)
 
 for img in imgs:
     kp = detector.detect(img)
-    
+
     img_features = sift_bow_extractor.compute(img, kp)
-    
+
     features = np.concatenate((features, img_features), axis=0)
 
 
@@ -202,18 +202,18 @@ from sklearn.metrics import classification_report
 from sklearn.metrics import roc_curve, auc
 from sklearn.preprocessing import label_binarize
 
-def k_fold_model_select(features, labels, raw_classifiers, n_folds=10, weigh_samples_fn=None): 
+def k_fold_model_select(features, labels, raw_classifiers, n_folds=10, weigh_samples_fn=None):
     # weigh_samples_fn is explained below
     # assumes that the raw_classifier output is in probability
-    
+
     # split into training and test data
-    X_train, X_test, y_train, y_test = train_test_split(features, 
+    X_train, X_test, y_train, y_test = train_test_split(features,
                                                         labels,
                                                         test_size=0.3,
                                                         stratify=labels,
                                                         random_state=0)
-    
-    
+
+
     # use stratified k-fold cross validation to select the model
     skf = StratifiedKFold(y_train, n_folds=n_folds)
 
@@ -237,29 +237,29 @@ def k_fold_model_select(features, labels, raw_classifiers, n_folds=10, weigh_sam
             if score > best_score:
                 best_classifier = classifier
                 best_score = score
-    
+
     # compute the confusion matrix
     y_pred = best_classifier.predict(X_test)
     conf_mat = confusion_matrix(y_test, y_pred)
-    
+
     # now compute the score for the test data of the best found classifier
     if weigh_samples_fn != None:
         sample_weight = weigh_samples_fn(y_test, y_pred)
     else:
         sample_weight = None
     test_score = accuracy_score(best_classifier.predict(X_test), y_test, sample_weight=sample_weight)
-    
+
     # obtain the classification report
     report = classification_report(y_test, y_pred, target_names=['cat', 'dog'], sample_weight=sample_weight)
-    
+
     # obtain ROC curve
     y_test_bin = label_binarize(y_test, classes=[0, 1])
     y_prob = best_classifier.predict_proba(X_test)
-    
+
     #fpr, tpr, _ = roc_curve(y_test_bin[:, 1], y_prob[:, 1])
     fpr, tpr, _ = roc_curve(y_test_bin, y_prob[:, 1])
     roc_info = (best_classifier.__class__.__name__, (fpr, tpr))
-    
+
     return (test_score, report, conf_mat, roc_info, best_classifier)
 
 
@@ -370,7 +370,7 @@ print("Classification report:", best_rep, sep='\n')
 
 import pickle as pk
 
-best_clf = best_clf.train(features, labels)
+best_clf = best_clf.fit(features, labels)
 
 pk.dump(best_clf, open('best_clf.p', 'wb'))
 
@@ -383,7 +383,7 @@ def plot_roc_curves(roc_curves):
     for name, (fpr, tpr) in roc_curves:
         roc_auc = auc(fpr, tpr)
         plt.plot(fpr, tpr, lw=1, label='ROC for {} (area = {:0.2f})'.format(name, roc_auc))
-        
+
     plt.legend(bbox_to_anchor=(2.1, 1.05))
     plt.plot([0, 1], [0, 1], '--', color=(0.6, 0.6, 0.6), label='Luck')
 
@@ -401,8 +401,8 @@ plot_roc_curves(roc_curves)
 
 def save_labels_csv(labels):
     indexed_labels = np.concatenate((np.asmatrix(range(1, len(labels) + 1)).transpose(), np.asmatrix(labels)), axis=1)
-    
-    np.savetxt('result.csv', 
+
+    np.savetxt('result.csv',
                indexed_labels,
                fmt='%d',
                delimiter=',',
@@ -432,12 +432,12 @@ pred = []
 test_imgs = load_images(test_imgs_paths, gray=True)
 
 for img in test_imgs:
-    
+
     kp = detector.detect(img)
     img_features = sift_bow_extractor.compute(img, kp)
-    
+
     p = best_clf.predict(img_features)
-    
+
     pred.append(p)
 
 
@@ -447,6 +447,3 @@ save_labels_csv(pred)
 
 
 # In[ ]:
-
-
-
