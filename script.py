@@ -23,13 +23,13 @@ import pickle as pk
 from os import listdir
 
 plt.style.use('ggplot')
-get_ipython().magic('matplotlib inline')
+#%matplotlib inline
 
 
 # In[85]:
 
 NR_SAMPLES = 100
-NR_WORDS = 500
+NR_WORDS = 1000
 
 
 # ### Load training dataset
@@ -45,6 +45,9 @@ imgs_paths = [train_folder + filepath for filepath in listdir(train_folder)]
 
 
 # In[52]:
+
+# select a subset
+#imgs_paths = imgs_paths[:NR_SAMPLES]
 
 
 # In[11]:
@@ -367,6 +370,8 @@ print("Classification report:", best_rep, sep='\n')
 
 import pickle as pk
 
+best_clf = best_clf.train(features, labels)
+
 pk.dump(best_clf, open('best_clf.p', 'wb'))
 
 
@@ -415,7 +420,9 @@ test_folder = 'data/test1/'
 test_imgs_paths = [test_folder + filepath for filepath in listdir(test_folder)]
 
 
-# In[131]
+# In[131]:
+
+#test_imgs_paths = test_imgs_paths[:10]
 
 
 # In[132]:
